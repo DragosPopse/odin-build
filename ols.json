@@ -1,6 +1,9 @@
 {
     "collections": [
-        
+        {
+            "name": "shared",
+            "path": "D:\\dev\\vendor\\odin\\shared"
+        }
     ],
     "enable_document_symbols": true,
     "enable_semantic_tokens": false,

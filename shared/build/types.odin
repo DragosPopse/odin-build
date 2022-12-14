@@ -1,5 +1,7 @@
 package jam_build
 
+import "core:runtime"
+
 Define_Val :: union #no_nil {
     bool,
     int,
@@ -7,8 +9,8 @@ Define_Val :: union #no_nil {
 }
 
 Platform :: struct {
-    os: Odin_OS_Type,
-    arch: Odin_Arch_Type,
+    os: runtime.Odin_OS_Type,
+    arch: runtime.Odin_Arch_Type,
 }
 
 // intrussive? rawptr maybe
@@ -18,9 +20,11 @@ Target :: struct {
 
 Config :: struct {
     platform: Platform, // Change this to a Maybe?
+    out: string,
     build_mode: Build_Mode,
     optimization: Optimization_Mode,
     vet: Vet_Mode,
+    style: Style_Mode,
     flags: Compiler_Flags,
     defines: map[string]Define_Val,
     collections: map[string]string,
@@ -95,6 +99,7 @@ Timings_Format :: enum {
     CSV,
 }
 
+//TODO
 Timings_Export :: struct {
     mode: Timings_Mode,
     format: Timings_Format,

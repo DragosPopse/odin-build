@@ -48,8 +48,8 @@ _style_mode_to_arg := [Style_Mode]string {
     .Strict_Init_Only = "-strict-style-init-only",
 }
 
-_target_to_arg := [Odin_OS_Type]string {
-    .Unknown = "",
+_os_to_arg := [Odin_OS_Type]string {
+    .Unknown = "UNKNOWN_OS",
     .Windows = "windows",
     .Darwin = "darwin",
     .Linux = "linux",
@@ -63,7 +63,7 @@ _target_to_arg := [Odin_OS_Type]string {
 
 // To be combined with _target_to_arg
 _arch_to_arg := [Odin_Arch_Type]string {
-    .Unknown = "",
+    .Unknown = "UNKNOWN_ARCH",
     .amd64 = "amd64",
     .i386 = "i386",
     .arm32 = "arm32",
