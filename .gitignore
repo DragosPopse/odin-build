@@ -4,8 +4,7 @@
 !*/
 
 !.gitignore
-!btest.bat
-!rtest.bat
+!run_demo.bat
 !ols.json
 !README.md
 
