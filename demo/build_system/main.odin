@@ -14,8 +14,7 @@ platforms := []build.Platform{
 
 modes := [][]build.Default_Target_Mode {
     {.Debug, .Release},
-    {.Release, .Debug},
-    {.Debug, .Release},
+    {.Release}, // only release on linux
 }
 
 add_targets :: proc(project: ^Project) {
