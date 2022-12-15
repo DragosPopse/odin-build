@@ -56,7 +56,7 @@ main :: proc() {
     project: build.Project(build.Default_Target)
     project.targets = make([dynamic]Target)
     project.configure_target_proc = configure_target
-    project.src_root = "test/to_build"
+    project.src_root = "demo/to_build"
     add_targets(&project)
     build.build_project(project)
 }
