@@ -1,0 +1,13 @@
+# Ignore everything
+*
+# But descend into directories
+!*/
+
+!.gitignore
+!btest.bat
+!rtest.bat
+!ols.json
+!README.md
+
+!shared/**
+!test/**
