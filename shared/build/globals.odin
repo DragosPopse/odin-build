@@ -1,5 +1,7 @@
 package jam_build
 
+import "core:runtime"
+
 // Note: Cannot index a constant???
 _compiler_flag_to_arg := [Compiler_Flag]string {
     .Debug = "-debug",
@@ -48,7 +50,7 @@ _style_mode_to_arg := [Style_Mode]string {
     .Strict_Init_Only = "-strict-style-init-only",
 }
 
-_os_to_arg := [Odin_OS_Type]string {
+_os_to_arg := [runtime.Odin_OS_Type]string {
     .Unknown = "UNKNOWN_OS",
     .Windows = "windows",
     .Darwin = "darwin",
@@ -62,7 +64,7 @@ _os_to_arg := [Odin_OS_Type]string {
 }
 
 // To be combined with _target_to_arg
-_arch_to_arg := [Odin_Arch_Type]string {
+_arch_to_arg := [runtime.Odin_Arch_Type]string {
     .Unknown = "UNKNOWN_ARCH",
     .amd64 = "amd64",
     .i386 = "i386",
