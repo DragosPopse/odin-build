@@ -30,7 +30,11 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
         case .Invalid:
             
         case .Display_Help: {
-
+            fmt.printf("Available Targets:\n")
+            for target in project.targets {
+                config := project->configure_target_proc(target)
+                fmt.printf("\t%s\n", config.name)
+            }
         }
 
         case .Build: {
