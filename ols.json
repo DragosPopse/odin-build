@@ -1,12 +1,13 @@
 {
-    "collections": [
-        {
-            "name": "shared",
-            "path": "D:\\dev\\vendor\\odin\\shared"
-        }
-    ],
-    "enable_document_symbols": true,
-    "enable_semantic_tokens": false,
-    "enable_hover": true,
-    "enable_snippets": true
+	"collections": [
+		{
+			"name": "shared", 
+			"path": "D:/dev/vendor/odin\\shared"
+		}
+	], 
+	"enable_document_symbols": true, 
+	"enable_semantic_tokens": true, 
+	"enable_hover": true, 
+	"enable_snippets": true, 
+	"checker_args": "-build-mode:exe -o:minimal -target:windows_amd64 -debug -collection:shared=\"D:/dev/vendor/odin\\shared\" -out:out/test/windows-amd64-debug/game.exe"
 }

@@ -126,6 +126,19 @@ Dev_Env :: enum {
     // TODO: Add more IDEs/editors
 }
 
+Collection :: struct {
+    name, path: string,
+}
+
+Language_Server_Settings :: struct {
+    collections: [dynamic]Collection,
+    enable_document_symbols: bool,
+    enable_semantic_tokens: bool,
+    enable_hover: bool, 
+    enable_snippets: bool,
+    checker_args: string,
+}
+
 
 
 

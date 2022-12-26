@@ -3,6 +3,7 @@ package test_build_system
 import "core:fmt"
 import "shared:build"
 import "core:os"
+import "core:strings"
 
 Target :: build.Default_Target
 Project :: build.Project(Target)
@@ -37,7 +38,7 @@ configure_target :: proc(project: Project, target: Target) -> (config: build.Con
 
     config = build.config_make()
     config.platform = target.platform
-    
+    config.collections["shared"] = strings.concatenate({ODIN_ROOT, "shared"})
     config.name = fmt.aprintf("%s-%s", osStr, archStr)
     #partial switch target.platform.os {
         case .Windows: {

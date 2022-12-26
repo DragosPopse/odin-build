@@ -6,6 +6,7 @@ import "core:os"
 import "core:c/libc"
 import "core:path/filepath"
 import "core:sync"
+import "core:encoding/json"
 
 config_make :: proc(allocator := context.allocator) -> (config: Config) {
     config.defines = make(map[string]Define_Val, 32, allocator)
@@ -101,10 +102,33 @@ build_package :: proc(pkg_path: string, config: Config) {
     libc.system(command)
 }
 
-generate_ols :: proc(root_path: string, config: Config) {
-
+generate_ols :: proc(config: Config) {
+    argsBuilder := strings.builder_make()
+    _config_to_args(&argsBuilder, config)
+    args := strings.to_string(argsBuilder)
+    settings := default_language_server_settings(context.temp_allocator)
+    for name, path in config.collections {
+        append(&settings.collections, Collection{name = name, path = path})
+    }
+    settings.checker_args = args
+    marshalOpts: json.Marshal_Options
+    marshalOpts.pretty = true
+    if data, err := json.marshal(settings, marshalOpts, context.temp_allocator); err == nil {
+        if file, err := os.open("ols.json", os.O_CREATE | os.O_TRUNC); err == os.ERROR_NONE {
+            os.write_string(file, string(data))
+            os.close(file)
+        }   
+    }
 }
 
+default_language_server_settings :: proc(allocator := context.allocator) -> (settings: Language_Server_Settings) {
+    settings.collections = make([dynamic]Collection, allocator)
+    settings.enable_document_symbols = true 
+    settings.enable_semantic_tokens = true 
+    settings.enable_hover = true 
+    settings.enable_snippets = true
+    return 
+}
 
 default_build_options :: proc() -> (o: Build_Options) {
     o.command_type = .Build

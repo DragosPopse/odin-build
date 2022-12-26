@@ -68,7 +68,19 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
         }
 
         case .Dev_Setup: {
+            foundTarget := false
+                for target in project.targets {
+                    config := project->configure_target_proc(target)
+                    if options.config_name == config.name {
+                        foundTarget = true
+                        generate_ols(config)
+                        break
+                    }
+                }
 
+                if !foundTarget {
+                    fmt.printf("Could not find configuration %s\n", options.config_name)
+                }
         }
     }
     
