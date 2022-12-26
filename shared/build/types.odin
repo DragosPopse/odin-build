@@ -2,6 +2,19 @@ package jam_build
 
 import "core:runtime"
 
+Build_Command_Type :: enum {
+    Invalid,
+    Build,
+    Dev_Setup,
+    Display_Help,
+}
+
+Build_Options :: struct {
+    command_type: Build_Command_Type,
+    config_name: string, // Config.name, empty or `all`
+    dev_env: Dev_Env,
+}
+
 Define_Val :: union #no_nil {
     bool,
     int,
@@ -19,6 +32,7 @@ Target :: struct {
 }
 
 Config :: struct {
+    name: string, // Calling `output.exe <config name>` will build only that config
     platform: Platform, // Change this to a Maybe?
     out: string,
     build_mode: Build_Mode,
@@ -106,6 +120,11 @@ Timings_Export :: struct {
     filename: Maybe(string),
 }
 
+Dev_Env :: enum {
+    None,
+    VSCode,
+    // TODO: Add more IDEs/editors
+}
 
 
 

@@ -81,9 +81,6 @@ _config_to_args :: proc(sb: ^strings.Builder, config: Config) {
     sbprintf(sb, "-out:%s", config.out)
 }
 
-generate_ols :: proc(root_path: string, config: Config) {
-
-}
 
 build_package :: proc(pkg_path: string, config: Config) {
     config_output_dirs: {
@@ -102,4 +99,66 @@ build_package :: proc(pkg_path: string, config: Config) {
     command := fmt.ctprintf("odin build %s %s", pkg_path, args)
     fmt.printf("Running: %s\n", command)
     libc.system(command)
+}
+
+generate_ols :: proc(root_path: string, config: Config) {
+
+}
+
+
+default_build_options :: proc() -> (o: Build_Options) {
+    o.command_type = .Build
+    o.config_name = "all"
+    return
+}
+
+/*
+    output.exe <config-name|all> // build 1 target or all
+    output.exe -devenv:<editor> <config-name> // Setup the devenv without building. If no editor is specified, it will just generate ols.json
+    output.exe help
+*/
+build_options_make_from_args :: proc(args: []string) -> (o: Build_Options) {
+    if len(args) == 0 {
+        o.command_type = .Display_Help
+        return
+    }
+    command := args[0] 
+    switch {
+        case strings.has_prefix(command, "-devenv"): {
+            o.command_type = .Dev_Setup
+            components := strings.split(command, ":", context.temp_allocator)
+            if len(components) == 2 {
+                switch components[1] {
+                    case "vscode": {
+                        o.dev_env = .VSCode 
+                    }
+                    case: {
+                        o.dev_env = .None 
+                        o.command_type = .Invalid
+                    }
+                }
+            } else {
+                o.dev_env = .None
+            }
+        }
+
+        case: {
+            o.command_type = .Build
+        }
+    }
+
+    #partial switch o.command_type {
+        case .Build: {
+            assert(len(args) == 1, "Expected 1 argument for build command")
+            o.config_name = args[0] 
+        }
+        
+        case .Dev_Setup: {
+            assert(len(args) == 2, "Expected 1 argument for devenv command")
+            o.config_name = args[1]
+        }
+    }
+
+    assert(o.command_type != .Invalid, "Invalid arguments")
+    return
 }

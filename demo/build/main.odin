@@ -2,6 +2,7 @@ package test_build_system
 
 import "core:fmt"
 import "shared:build"
+import "core:os"
 
 Target :: build.Default_Target
 Project :: build.Project(Target)
@@ -33,13 +34,22 @@ configure_target :: proc(project: Project, target: Target) -> (config: build.Con
     archStr := build._arch_to_arg[target.platform.arch]
     modeStr: string
     exeStr := "game.out"
-    #partial switch target.platform.os {
-        case .Windows: exeStr = "game.exe" 
-    }
 
     config = build.config_make()
     config.platform = target.platform
     
+    config.name = fmt.aprintf("%s-%s", osStr, archStr)
+    #partial switch target.platform.os {
+        case .Windows: {
+            exeStr = "game.exe"
+            if target.mode == .Debug {
+                config.name = "windb" // mem leak but who cares its a build system
+            }
+        }
+       
+    }
+
+
     if target.mode == .Debug {
         config.flags += {.Debug}
         config.optimization = .Minimal
@@ -48,7 +58,7 @@ configure_target :: proc(project: Project, target: Target) -> (config: build.Con
         config.optimization = .Speed
         modeStr = "release"
     }
-    config.out = fmt.aprintf("build/test/%s-%s-%s/%s", osStr, archStr, modeStr, exeStr)
+    config.out = fmt.aprintf("out/test/%s-%s-%s/%s", osStr, archStr, modeStr, exeStr)
     return
 }
 
@@ -57,6 +67,7 @@ main :: proc() {
     project.targets = make([dynamic]Target)
     project.configure_target_proc = configure_target
     project.src_root = "demo/to_build"
+    options := build.build_options_make_from_args(os.args[1:])
     add_targets(&project)
-    build.build_project(project)
+    build.build_project(project, options)
 }
