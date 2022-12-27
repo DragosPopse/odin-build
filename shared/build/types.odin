@@ -97,6 +97,7 @@ Compiler_Flag :: enum {
     Warnings_As_Errors,
     Keep_Temp_Files,
     No_Threaded_Checker,
+    Show_System_Calls,
 }
 
 Compiler_Flags :: bit_set[Compiler_Flag]

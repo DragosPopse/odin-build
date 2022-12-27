@@ -22,6 +22,7 @@ _compiler_flag_to_arg := [Compiler_Flag]string {
     .Warnings_As_Errors = "-warnings-as-errors",
     .Keep_Temp_Files = "-keep-temp-files",
     .No_Threaded_Checker = "-no-threaded-checker",
+    .Show_System_Calls = "-show-system-calls",
 }
 
 _optimization_mode_to_arg := [Optimization_Mode]string {
