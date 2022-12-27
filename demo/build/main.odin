@@ -44,12 +44,11 @@ configure_target :: proc(project: Project, target: Target) -> (config: build.Con
         case .Windows: {
             exeStr = "game.exe"
             if target.mode == .Debug {
-                config.name = "windb" // mem leak but who cares its a build system
+                config.name = "windb" // Make it easier to call the build script
             }
         }
        
     }
-
 
     if target.mode == .Debug {
         config.flags += {.Debug}

@@ -79,7 +79,7 @@ _config_to_args :: proc(sb: ^strings.Builder, config: Config) {
         write_string(sb, " ")
     }
 
-    sbprintf(sb, "-out:%s", config.out)
+    sbprintf(sb, `-out:"%s"`, config.out)
 }
 
 
