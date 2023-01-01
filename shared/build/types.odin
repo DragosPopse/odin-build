@@ -34,6 +34,8 @@ Target :: struct {
 Config :: struct {
     name: string, // Calling `output.exe <config name>` will build only that config
     platform: Platform, // Change this to a Maybe?
+    pre_build_commands: [dynamic]Command,
+    post_build_commands: [dynamic]Command,
     out: string,
     build_mode: Build_Mode,
     optimization: Optimization_Mode,
@@ -140,8 +142,6 @@ Language_Server_Settings :: struct {
     checker_args: string,
 }
 
-
-
-
+Command :: #type proc(config: Config) -> int
 
 

@@ -11,12 +11,16 @@ import "core:encoding/json"
 config_make :: proc(allocator := context.allocator) -> (config: Config) {
     config.defines = make(map[string]Define_Val, 32, allocator)
     config.collections = make(map[string]string, 16, allocator)
+    config.post_build_commands = make([dynamic]Command, 16, allocator)
+    config.pre_build_commands = make([dynamic]Command, 16, allocator)
     return
 }
 
 config_delete :: proc(config: Config) {
     delete(config.defines)
     delete(config.collections)
+    delete(config.post_build_commands)
+    delete(config.pre_build_commands)
 }
 
 _define_to_arg :: proc(sb: ^strings.Builder, name: string, val: Define_Val) {
@@ -97,8 +101,14 @@ build_package :: proc(pkg_path: string, config: Config) {
     argsBuilder := strings.builder_make() 
     _config_to_args(&argsBuilder, config)
     args := strings.to_string(argsBuilder)
+    for cmd in config.pre_build_commands {
+        cmd(config)
+    }
     command := fmt.ctprintf("odin build %s %s", pkg_path, args)
     fmt.printf("Running: %s\n", command)
+    for cmd in config.post_build_commands {
+        cmd(config)
+    }
     libc.system(command)
 }
 
@@ -185,4 +195,12 @@ build_options_make_from_args :: proc(args: []string) -> (o: Build_Options) {
 
     assert(o.command_type != .Invalid, "Invalid arguments")
     return
+}
+
+syscall_command :: proc($cmd: string) -> return Command {
+    return proc(config: Config) {
+        cstr := strings.clone_to_cstring(cmd, context.temp_allocator)
+        result := cast(int)libc.system(cstr)
+        return result
+    }
 }
