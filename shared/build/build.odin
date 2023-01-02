@@ -23,6 +23,22 @@ config_delete :: proc(config: Config) {
     delete(config.pre_build_commands)
 }
 
+add_post_build_command :: proc(config: ^Config, name: string, cmd: Command_Proc) {
+    command := Command {
+        name = name,
+        command = cmd,
+    }
+    append(&config.post_build_commands, command)
+}
+
+add_pre_build_command :: proc(config: ^Config, name: string, cmd: Command_Proc) {
+    command := Command {
+        name = name,
+        command = cmd,
+    }
+    append(&config.pre_build_commands, command)
+}
+
 _define_to_arg :: proc(sb: ^strings.Builder, name: string, val: Define_Val) {
     using strings
     
@@ -87,7 +103,7 @@ _config_to_args :: proc(sb: ^strings.Builder, config: Config) {
 }
 
 
-build_package :: proc(pkg_path: string, config: Config) {
+build_package :: proc(config: Config) {
     config_output_dirs: {
         dir := filepath.dir(config.out, context.temp_allocator) 
         slashDir, _ := filepath.to_slash(dir, context.temp_allocator)
@@ -102,12 +118,18 @@ build_package :: proc(pkg_path: string, config: Config) {
     _config_to_args(&argsBuilder, config)
     args := strings.to_string(argsBuilder)
     for cmd in config.pre_build_commands {
-        cmd(config)
+        if result := cmd.command(config); result != 0 {
+            fmt.fprintf(os.stderr, "Pre-Build Command '%s' failed with exit code %d\n", command.name, result)
+            return
+        }
     }
-    command := fmt.ctprintf("odin build %s %s", pkg_path, args)
+    command := fmt.ctprintf("odin build %s %s", config.src, args)
     fmt.printf("Running: %s\n", command)
     for cmd in config.post_build_commands {
-        cmd(config)
+        if result := cmd.command(config); result != 0 {
+            fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", command.name, result)
+            return
+        }
     }
     libc.system(command)
 }

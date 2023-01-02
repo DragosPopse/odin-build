@@ -59,6 +59,7 @@ configure_target :: proc(project: Project, target: Target) -> (config: build.Con
         modeStr = "release"
     }
     config.out = fmt.aprintf("out/test/%s-%s-%s/%s", osStr, archStr, modeStr, exeStr)
+    config.src = "demo/to_build"
     return
 }
 
@@ -66,7 +67,7 @@ main :: proc() {
     project: build.Project(build.Default_Target)
     project.targets = make([dynamic]Target)
     project.configure_target_proc = configure_target
-    project.src_root = "demo/to_build"
+    
     options := build.build_options_make_from_args(os.args[1:])
     add_targets(&project)
     build.build_project(project, options)

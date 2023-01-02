@@ -7,6 +7,7 @@ Build_Command_Type :: enum {
     Build,
     Dev_Setup,
     Display_Help,
+    Build_Dependencies,
 }
 
 Build_Options :: struct {
@@ -26,16 +27,13 @@ Platform :: struct {
     arch: runtime.Odin_Arch_Type,
 }
 
-// intrussive? rawptr maybe
-Target :: struct {
-
-}
 
 Config :: struct {
     name: string, // Calling `output.exe <config name>` will build only that config
     platform: Platform, // Change this to a Maybe?
-    pre_build_commands: [dynamic]Command,
-    post_build_commands: [dynamic]Command,
+    src: string,
+    pre_build_commands: [dynamic]Command_Proc,
+    post_build_commands: [dynamic]Command_Proc,
     out: string,
     build_mode: Build_Mode,
     optimization: Optimization_Mode,
@@ -142,6 +140,11 @@ Language_Server_Settings :: struct {
     checker_args: string,
 }
 
-Command :: #type proc(config: Config) -> int
 
+Command_Proc :: #type proc(config: Config) -> int
+
+Command :: struct {
+    name: string,
+    command: Command_Proc,
+}
 

@@ -17,7 +17,6 @@ Default_Target :: struct {
 
 Project :: struct($Target: typeid) {
     targets: [dynamic]Target,
-    src_root: string,
     configure_target_proc: proc(project: Project(Target), target: Target) -> Config, // There should be a way to skip a target. Maybe(Config)?
 }
 
@@ -38,7 +37,13 @@ display_command_help :: proc(project: Project($Target)) {
 
 build_project :: proc(project: Project($Target), options: Build_Options) {
     switch options.command_type {
-        case .Invalid:
+        case .Invalid: {}
+
+        case .Build_Dependencies: {
+            if options.config_name == "all" {
+
+            }
+        }
             
         case .Display_Help: {
            display_command_help(project)
