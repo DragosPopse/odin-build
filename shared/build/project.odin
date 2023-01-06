@@ -53,7 +53,7 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
             if options.config_name == "all" {
                 for target in project.targets {
                     config := project->configure_target_proc(target)
-                    build_package(project.src_root, config)
+                    build_package(config)
                 }
             } else {
                 foundTarget := false
@@ -61,7 +61,7 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
                     config := project->configure_target_proc(target)
                     if options.config_name == config.name {
                         foundTarget = true
-                        build_package(project.src_root, config)
+                        build_package(config)
                         break
                     }
                 }

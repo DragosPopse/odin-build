@@ -32,8 +32,8 @@ Config :: struct {
     name: string, // Calling `output.exe <config name>` will build only that config
     platform: Platform, // Change this to a Maybe?
     src: string,
-    pre_build_commands: [dynamic]Command_Proc,
-    post_build_commands: [dynamic]Command_Proc,
+    pre_build_commands: [dynamic]Command,
+    post_build_commands: [dynamic]Command,
     out: string,
     build_mode: Build_Mode,
     optimization: Optimization_Mode,

@@ -119,7 +119,7 @@ build_package :: proc(config: Config) {
     args := strings.to_string(argsBuilder)
     for cmd in config.pre_build_commands {
         if result := cmd.command(config); result != 0 {
-            fmt.fprintf(os.stderr, "Pre-Build Command '%s' failed with exit code %d\n", command.name, result)
+            fmt.fprintf(os.stderr, "Pre-Build Command '%s' failed with exit code %d\n", cmd.name, result)
             return
         }
     }
@@ -127,7 +127,7 @@ build_package :: proc(config: Config) {
     fmt.printf("Running: %s\n", command)
     for cmd in config.post_build_commands {
         if result := cmd.command(config); result != 0 {
-            fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", command.name, result)
+            fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", cmd.name, result)
             return
         }
     }
@@ -219,7 +219,7 @@ build_options_make_from_args :: proc(args: []string) -> (o: Build_Options) {
     return
 }
 
-syscall_command :: proc($cmd: string) -> return Command {
+syscall_command :: proc($cmd: string) -> Command {
     return proc(config: Config) {
         cstr := strings.clone_to_cstring(cmd, context.temp_allocator)
         result := cast(int)libc.system(cstr)
