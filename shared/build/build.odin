@@ -11,8 +11,8 @@ import "core:encoding/json"
 config_make :: proc(allocator := context.allocator) -> (config: Config) {
     config.defines = make(map[string]Define_Val, 32, allocator)
     config.collections = make(map[string]string, 16, allocator)
-    config.post_build_commands = make([dynamic]Command, 16, allocator)
-    config.pre_build_commands = make([dynamic]Command, 16, allocator)
+    config.post_build_commands = make(T = [dynamic]Command, allocator = allocator)
+    config.pre_build_commands = make(T = [dynamic]Command, allocator = allocator)
     return
 }
 
@@ -125,13 +125,14 @@ build_package :: proc(config: Config) {
     }
     command := fmt.ctprintf("odin build %s %s", config.src, args)
     fmt.printf("Running: %s\n", command)
+    libc.system(command)
     for cmd in config.post_build_commands {
         if result := cmd.command(config); result != 0 {
             fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", cmd.name, result)
             return
         }
     }
-    libc.system(command)
+   
 }
 
 generate_ols :: proc(config: Config) {
