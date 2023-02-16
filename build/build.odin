@@ -18,6 +18,14 @@ config_make :: proc(allocator := context.allocator) -> (config: Config) {
     return
 }
 
+syscall :: proc(cmd: string, echo: bool) -> int {
+    cstr := strings.clone_to_cstring(cmd, context.temp_allocator)
+    if echo {
+        fmt.printf("%s\n", cmd)
+    }
+    return cast(int)libc.system(cstr)
+}
+
 config_delete :: proc(config: Config) {
     delete(config.defines)
     delete(config.collections)
@@ -126,7 +134,7 @@ build_package :: proc(config: Config) {
         }
     }
     command := fmt.ctprintf("odin build %s %s", config.src, args)
-    fmt.printf("Running: %s\n", command)
+    fmt.printf("%s\n", command)
     libc.system(command)
     for cmd in config.post_build_commands {
         if result := cmd.command(config); result != 0 {
