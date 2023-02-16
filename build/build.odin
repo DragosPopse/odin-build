@@ -8,6 +8,8 @@ import "core:path/filepath"
 import "core:sync"
 import "core:encoding/json"
 
+import "patterns"
+
 config_make :: proc(allocator := context.allocator) -> (config: Config) {
     config.defines = make(map[string]Define_Val, 32, allocator)
     config.collections = make(map[string]string, 16, allocator)
@@ -165,7 +167,7 @@ default_language_server_settings :: proc(allocator := context.allocator) -> (set
 
 default_build_options :: proc() -> (o: Build_Options) {
     o.command_type = .Build
-    o.config_name = "all"
+    o.config_name = "*"
     return
 }
 

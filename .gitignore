@@ -8,5 +8,5 @@
 !ols.json
 !README.md
 
-!shared/**
+!build/**
 !demo/**

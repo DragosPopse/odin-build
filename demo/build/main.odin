@@ -1,7 +1,7 @@
 package test_build_system
 
 import "core:fmt"
-import "shared:build"
+import "../../build"
 import "core:os"
 import "core:strings"
 

@@ -3,6 +3,7 @@ package jam_build
 import "core:thread"
 import "core:fmt"
 import "core:os"
+import "patterns"
 
 Default_Target_Mode :: enum {
     Release,
@@ -40,9 +41,7 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
         case .Invalid: {}
 
         case .Build_Dependencies: {
-            if options.config_name == "all" {
-
-            }
+            
         }
             
         case .Display_Help: {
@@ -50,33 +49,26 @@ build_project :: proc(project: Project($Target), options: Build_Options) {
         }
 
         case .Build: {
-            if options.config_name == "all" {
-                for target in project.targets {
-                    config := project->configure_target_proc(target)
+            foundTarget := false
+            for target in project.targets {
+                config := project->configure_target_proc(target)
+                if patterns.match(options.config_name, config.name) {
+                    foundTarget = true
                     build_package(config)
                 }
-            } else {
-                foundTarget := false
-                for target in project.targets {
-                    config := project->configure_target_proc(target)
-                    if options.config_name == config.name {
-                        foundTarget = true
-                        build_package(config)
-                        break
-                    }
-                }
-
-                if !foundTarget {
-                    fmt.printf("Could not find configuration %s\n", options.config_name)
-                }
             }
+
+            if !foundTarget {
+                fmt.printf("Could not find configuration %s\n", options.config_name)
+            }
+            
         }
 
         case .Dev_Setup: {
             foundTarget := false
                 for target in project.targets {
                     config := project->configure_target_proc(target)
-                    if options.config_name == config.name {
+                    if patterns.match(options.config_name, config.name) {
                         foundTarget = true
                         generate_ols(config)
                         break
