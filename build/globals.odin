@@ -26,6 +26,7 @@ _compiler_flag_to_arg := [Compiler_Flag]string {
 }
 
 _optimization_mode_to_arg := [Optimization_Mode]string {
+    .None = "-o:none",
     .Minimal = "-o:minimal",
     .Size = "-o:size",
     .Speed = "-o:speed",

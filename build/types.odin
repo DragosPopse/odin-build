@@ -66,6 +66,7 @@ Style_Mode :: enum {
 }
 
 Optimization_Mode :: enum {
+    None,
     Minimal,
     Speed,
     Size,
