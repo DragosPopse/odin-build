@@ -13,8 +13,8 @@ import "patterns"
 config_make :: proc(allocator := context.allocator) -> (config: Config) {
     config.defines = make(map[string]Define_Val, 32, allocator)
     config.collections = make(map[string]string, 16, allocator)
-    config.post_build_commands = make(T = [dynamic]Command, allocator = allocator)
-    config.pre_build_commands = make(T = [dynamic]Command, allocator = allocator)
+    config.post_build_commands = make([dynamic]Command, allocator)
+    config.pre_build_commands = make([dynamic]Command, allocator)
     return
 }
 

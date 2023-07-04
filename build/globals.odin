@@ -73,5 +73,5 @@ _arch_to_arg := [runtime.Odin_Arch_Type]string {
     .arm32 = "arm32",
     .arm64 = "arm64",
     .wasm32 = "wasm32",
-    .wasm64 = "wasm64",
+    .wasm64p32 = "wasm64p32",
 }
