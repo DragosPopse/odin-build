@@ -135,13 +135,19 @@ build_package :: proc(config: Config) {
     }
     command := fmt.ctprintf("odin build %s %s", config.src, args)
     fmt.printf("%s\n", command)
-    libc.system(command)
-    for cmd in config.post_build_commands {
-        if result := cmd.command(config); result != 0 {
-            fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", cmd.name, result)
-            return
+    exit_code := libc.system(command)
+    if exit_code != 0 {
+        fmt.printf("Build failed with exit code %v\n", exit_code)
+        return
+    } else {
+        for cmd in config.post_build_commands {
+            if result := cmd.command(config); result != 0 {
+                fmt.fprintf(os.stderr, "Post-Build Command '%s' failed with exit code %d\n", cmd.name, result)
+                return
+            }
         }
     }
+    
    
 }
 
