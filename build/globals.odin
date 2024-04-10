@@ -73,6 +73,7 @@ _os_to_arg := [runtime.Odin_OS_Type]string {
 	.WASI = "wasi",
 	.JS = "js",
 	.Freestanding = "freestanding",
+	.Haiku = "haiku",
 }
 
 // To be combined with _target_to_arg
@@ -102,4 +103,10 @@ _sanitize_to_arg := [Sanitize_Flag]string{
 	.Address = "-sanitize:address",
 	.Memory = "-sanitize:memory",
 	.Thread = "-sanitize:thread",
+}
+
+_timings_mode_to_arg := [Timings_Mode]string {
+	.Disabled = "",
+	.Basic    = "-show-timings",
+	.Advanced = "-show-more-timings",
 }

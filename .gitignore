@@ -4,9 +4,6 @@
 !*/
 
 !.gitignore
-!run_demo.bat
-!ols.json
 !README.md
 
 !build/**
-!demo/**

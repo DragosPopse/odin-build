@@ -236,6 +236,10 @@ build_odin_args :: proc(config: Odin_Config, allocator := context.allocator) -> 
 		fmt.sbprintf(&sb, " -thread-count:%d", config.thread_count)
 	}
 
+	if config.timings.mode != .Disabled {
+		fmt.sbprintf(&sb, " %s", _timings_mode_to_arg[config.timings.mode])
+	}
+
 	return strings.to_string(sb)
 }
 

@@ -29,3 +29,18 @@ exec :: proc(file: string, args: []string) -> int {
 	cmd_c := strings.clone_to_cstring(cmd, context.temp_allocator)
 	return cast(int)libc.system(cmd_c)
 }
+
+copy_file :: proc(src, dst: string) -> bool {
+	data := os.read_entire_file(src) or_return
+	os.write_entire_file(dst, data) or_return
+	return true
+}
+
+copy_directory :: proc(src, dst: string) -> bool {
+	if ODIN_OS != .Windows {
+		panic("build.copy_directory is not supported on non-windows")
+	}
+	cmd := fmt.tprintf("robocopy \"%s\" \"%s\" /MIR /NFL /NDL /NJH /NJS /nc /ns /np", src, dst)
+	result := exec(cmd, {})
+	return result == 0
+}
