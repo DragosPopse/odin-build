@@ -13,7 +13,6 @@ import "core:unicode"
 import "core:strconv"
 import "core:intrinsics"
 
-
 Flag_Arg :: struct { // -flag:key=val
 	flag: string,
 	key: string,
@@ -119,9 +118,13 @@ print_general_help :: proc(info: Cli_Info) {
 	}
 }
 
-run_cli :: proc(info: Cli_Info, cli_args: []string) -> bool {
+run_cli :: proc(info: Cli_Info, cli_args: []string, loc := #caller_location) -> bool {
 	runtime.DEFAULT_TEMP_ALLOCATOR_TEMP_GUARD()
+	_project_directory = filepath.join({loc.file_path, "../../"})
 	args, err := parse_args(cli_args, context.temp_allocator) // cli_args[0] should be the executable
+
+	read_build_cache()
+
 	target_names_from_args := make_dynamic_array_len_cap([dynamic]string, 0, len(info.project.targets), context.temp_allocator) // This is not fully correct right now
 	filtered_args_by_mode := make([dynamic]Arg, context.temp_allocator)
 	current_mode: Maybe(Run_Mode)
@@ -177,6 +180,8 @@ run_cli :: proc(info: Cli_Info, cli_args: []string) -> bool {
 			} 
 		}
 	}
+
+	write_build_cache()
 
 	return true
 }

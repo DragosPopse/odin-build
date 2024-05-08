@@ -34,6 +34,16 @@ Target :: struct {
 	name: string,
 	platform: Platform,
 
+	// Defines a list of sources to this target.
+	// If any of these change, the target is re-run.
+	// Relative to where the target is defined.
+	sources: []string,
+
+	// Defines a list of outputs related to this target.
+	// If any output is missing, the target is re-run.
+	// Relative to where the target is defined.
+	outputs: []string,
+
 	run_proc: Target_Run_Proc,
 
 	project: ^Project,
@@ -61,9 +71,26 @@ add_target :: proc(project: ^Project, target: ^Target, run_proc: Target_Run_Proc
 	target.root_dir = loc.file_path[:slash_i]
 }
 
-run_target :: proc(target: ^Target, mode: Run_Mode, args: []Arg, loc := #caller_location) -> bool {
+run_target :: proc(target: ^Target, mode: Run_Mode, args: []Arg, loc := #caller_location) -> (ok: bool) {
 	assert(target.run_proc != nil, "Target run proc not found.")
-	return target.run_proc(target, mode, args, loc)
+
+	hash := hash_target(target)
+
+	outputs_ok := true
+	for output in target.outputs {
+		path := tabspath(target, output)
+		if !os.exists(path) {
+			outputs_ok = false
+			break
+		}
+	}
+
+	if !outputs_ok || target.name not_in _build_cache.checksums || _build_cache.checksums[target.name] != hash {
+		ok = target.run_proc(target, mode, args, loc)
+	}
+
+	_build_cache.checksums[target.name] = hash
+	return ok
 }
 
 // Returns a path relative to the target root dir. Tries to return the shortest relative path before returning the absolute path

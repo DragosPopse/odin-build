@@ -110,3 +110,7 @@ _timings_mode_to_arg := [Timings_Mode]string {
 	.Basic    = "-show-timings",
 	.Advanced = "-show-more-timings",
 }
+
+_build_cache: Build_Cache
+
+_project_directory: string
