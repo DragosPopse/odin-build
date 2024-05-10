@@ -138,7 +138,7 @@ run_cli :: proc(info: Cli_Info, cli_args: []string) -> bool {
 					current_mode = flag_desc.mode
 				}
 				if current_mode != flag_desc.mode {
-					fmt.eprintf("Mode %s set by %s is incompatible with previous mode %s set by previous flag %s. Run `%s -help`` for more details.\n", mode_strings[flag_desc.mode], flag_desc.flag, current_mode.?, last_flag, cli_args[0])
+					fmt.eprintf("Mode %s set by %s is incompatible with previous mode %s set by previous flag %s. Run `%s -help`` for more details.\n", mode_strings[flag_desc.mode], flag_desc.flag, current_mode.?, last_flag.flag, cli_args[0])
 					return false
 				}
 				last_flag = v
@@ -146,7 +146,7 @@ run_cli :: proc(info: Cli_Info, cli_args: []string) -> bool {
 				break
 			}
 			if !flag_found {
-				fmt.eprintf("Flag %s does not exist. Run `%s -help` for a list of available flags.\n", v, cli_args[0])
+				fmt.eprintf("Flag %s does not exist. Run `%s -help` for a list of available flags.\n", v.flag, cli_args[0])
 				return false
 			}
 		}
